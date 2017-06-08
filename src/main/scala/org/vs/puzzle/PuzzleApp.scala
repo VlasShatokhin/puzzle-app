@@ -38,13 +38,13 @@ object PuzzleApp {
                  |
                  |Enter a coordinate in from of x,y:""".stripMargin)
       val from: Position = Try {
-        val positionString = StdIn.readLine().split(",")
-        (positionString(0).toInt, positionString(1).toInt)
+        puzzle.positionByValue(StdIn.readInt).get
       } match {
         case Success(pos) => pos
         case Failure(x) => throw x
       }
 
+      println(s"position: $from")
       gameService.findNextPosition(from, puzzle) match {
         case Some(to) => puzzle = puzzle.reposition(from, to)
         case None => println("No spot available!")

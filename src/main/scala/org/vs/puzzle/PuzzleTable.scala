@@ -15,9 +15,14 @@ object PuzzleTable {
   def apply(vertex: Int, list: List[Option[Int]]): PuzzleTable =
     new PuzzleTable(vertex, _ => list)
 
-  def getIndex(position: Position): Int = position match {
-    case (x, y) => x * y -1
+  def getIndex(position: Position, vertex: Int): Int = position match {
+    case (x, y) => (x - 1) * vertex + y - 1
   }
+
+  @tailrec
+  final def getPosition(index: Int, vertex: Int, row: Int = 1): Position =
+    if (index <= vertex) (row, index)
+    else getPosition(index - vertex, vertex, row + 1)
 }
 
 class PuzzleTable(val vertex: Int, generator: Int => List[Option[Int]]) {
@@ -27,13 +32,19 @@ class PuzzleTable(val vertex: Int, generator: Int => List[Option[Int]]) {
   private val list: List[Option[Int]] = generator(vertex)
 
   def nonDefined(position: Position): Boolean = list {
-    getIndex(position)
+    getIndex(position, vertex)
   } isEmpty
 
   def reposition(from: Position, to: Position): PuzzleTable =
     PuzzleTable(vertex, list
-      .updated(getIndex(from), None)
-      .updated(getIndex(to), list(getIndex(from))))
+      .updated(getIndex(from, vertex), None)
+      .updated(getIndex(to, vertex), list(getIndex(from, vertex))))
+
+  def positionByValue(value: Int): Option[Position] = list.zipWithIndex find {
+    case (v, _) => v contains value
+  } map {
+    case (_, position) => getPosition(position + 1, vertex)
+  }
 
   @tailrec
   private def toTable[T](list: List[T], vertex: Int, table: List[List[T]] = List()): List[List[T]] =

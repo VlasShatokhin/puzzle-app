@@ -25,9 +25,4 @@ class GameService {
 
     getPotential find puzzleTable.nonDefined
   }
-
-  @tailrec
-  private def getPosition(index: Int, vertex: Int, row: Int = 1): Position =
-    if (index <= vertex) (row, index)
-    else getPosition(index - vertex, row + 1)
 }
