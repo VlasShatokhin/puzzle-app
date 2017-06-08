@@ -29,7 +29,7 @@ object PuzzleApp {
       case Failure(x) => throw x
     }
 
-    val puzzle = PuzzleTable(vertex,
+    var puzzle = PuzzleTable(vertex,
       v => (1 until v * v).map(Some(_)) :+ None toList)
 
     while (true) {
@@ -46,7 +46,7 @@ object PuzzleApp {
       }
 
       gameService.findNextPosition(from, puzzle) match {
-        case Some(to) => println(puzzle.reposition(from, to))
+        case Some(to) => puzzle = puzzle.reposition(from, to)
         case None => println("No spot available!")
       }
     }
