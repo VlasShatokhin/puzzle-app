@@ -16,7 +16,7 @@ object PuzzleTable {
     new PuzzleTable(vertex, _ => list)
 
   def getIndex(position: Position): Int = position match {
-    case (x, y) => x * y
+    case (x, y) => x * y -1
   }
 }
 
@@ -27,7 +27,7 @@ class PuzzleTable(val vertex: Int, generator: Int => List[Option[Int]]) {
   private val list: List[Option[Int]] = generator(vertex)
 
   def nonDefined(position: Position): Boolean = list {
-    getIndex(position) - 1
+    getIndex(position)
   } isEmpty
 
   def reposition(from: Position, to: Position): PuzzleTable =
